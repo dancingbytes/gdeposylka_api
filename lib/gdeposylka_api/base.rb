@@ -176,16 +176,16 @@ module GdeposylkaApi
 
       datas.delete_if { |k, v| v.nil? || v == '' }
 
-      uri = "#{::GdeposylkaApi::API_VERSION}"
+      uri = "/#{::GdeposylkaApi::API_VERSION}"
       uri << "/tracks.#{func}/"
       uri << "#{::GdeposylkaApi::API_TYPE}?apikey=#{::GdeposylkaApi.api_key}"
 
       unless datas.empty?
-        url << "&"
-        url << ::URI.encode_www_form(datas)
+        uri << "&"
+        uri << ::URI.encode_www_form(datas)
       end
 
-      url
+      uri
 
     end # request
 
