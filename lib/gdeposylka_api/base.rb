@@ -182,10 +182,6 @@ module GdeposylkaApi
 
     end # request
 
-    def escape(str)
-      ::URI::escape(str || "")
-    end # escape
-
     def log(msg)
 
       puts(msg) if ::GdeposylkaApi.debug?
