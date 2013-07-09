@@ -20,11 +20,10 @@ module GdeposylkaApi
         })
 
         log("[list] => #{uri}")
-
         res  = http.get(uri)
-        data = ::JSON.parse(res.body) rescue {}
+        log("[list] <= #{res.body}")
 
-        log("[list] <= #{data}")
+        data = ::JSON.parse(res.body) rescue {}
 
       end # block_run
       data
@@ -45,11 +44,10 @@ module GdeposylkaApi
         })
 
         log("[add] => #{uri}")
-
         res  = http.get(uri)
-        data = ::JSON.parse(res.body) rescue {}
+        log("[add] <= #{res.body}")
 
-        log("[add] <= #{data}")
+        data = ::JSON.parse(res.body) rescue {}
 
       end # block_run
       data
@@ -67,11 +65,10 @@ module GdeposylkaApi
         })
 
         log("[status] => #{uri}")
-
         res  = http.get(uri)
-        data = ::JSON.parse(res.body) rescue {}
+        log("[status] <= #{res.body}")
 
-        log("[status] <= #{data}")
+        data = ::JSON.parse(res.body) rescue {}
 
       end # block_run
       data
@@ -90,11 +87,10 @@ module GdeposylkaApi
         })
 
         log("[country] => #{uri}")
-
         res  = http.get(uri)
-        data = ::JSON.parse(res.body) rescue {}
+        log("[country] <= #{res.body}")
 
-        log("[country] <= #{data}")
+        data = ::JSON.parse(res.body) rescue {}
 
       end # block_run
       data
@@ -115,11 +111,10 @@ module GdeposylkaApi
         })
 
         log("[sms] => #{uri}")
-
         res  = http.get(uri)
-        data = ::JSON.parse(res.body) rescue {}
+        log("[sms] <= #{res.body}")
 
-        log("[sms] <= #{data}")
+        data = ::JSON.parse(res.body) rescue {}
 
       end # block_run
       data
@@ -137,11 +132,10 @@ module GdeposylkaApi
         })
 
         log("[resume] => #{uri}")
-
         res  = http.get(uri)
-        data = ::JSON.parse(res.body) rescue {}
+        log("[resume] <= #{res.body}")
 
-        log("[resume] <= #{data}")
+        data = ::JSON.parse(res.body) rescue {}
 
       end # block_run
       data
@@ -159,11 +153,10 @@ module GdeposylkaApi
         })
 
         log("[points] => #{uri}")
-
         res  = http.get(uri)
-        data = ::JSON.parse(res.body) rescue {}
+        log("[points] <= #{res.body}")
 
-        log("[points] <= #{data}")
+        data = ::JSON.parse(res.body) rescue {}
 
       end # block_run
       data
@@ -177,8 +170,8 @@ module GdeposylkaApi
       datas.delete_if { |k, v| v.nil? || v == '' }
 
       uri = "/#{::GdeposylkaApi::API_VERSION}"
-      uri << "/tracks.#{func}/"
-      uri << "#{::GdeposylkaApi::API_TYPE}?apikey=#{::GdeposylkaApi.api_key}"
+      uri << "/track.#{func}/"
+      uri << "#{::GdeposylkaApi::API_TYPE}/?apikey=#{::GdeposylkaApi.api_key}"
 
       unless datas.empty?
         uri << "&"
