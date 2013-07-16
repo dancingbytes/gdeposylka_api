@@ -9,7 +9,6 @@ module GdeposylkaApi
   HOST        = 'ws.gdeposylka.ru'
   USE_SSL     = false
   API_VERSION = 'x1'
-  API_TYPE    = 'json' # 'xml'
 
   def api_key(key = nil)
 
@@ -25,7 +24,7 @@ module GdeposylkaApi
   def debug_on
 
     @debug = true
-    puts "Отладочный режим ВКЛЮЧЕН"
+    puts "[GdeposylkaApi] Отладочный режим ВКЛЮЧЕН"
     self
 
   end # debug_on
@@ -33,7 +32,7 @@ module GdeposylkaApi
   def debug_off
 
     @debug = false
-    puts "Отладочный режим ОТКЛЮЧЕН"
+    puts "[GdeposylkaApi] Отладочный режим ОТКЛЮЧЕН"
     self
 
   end # debug_off

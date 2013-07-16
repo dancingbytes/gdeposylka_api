@@ -169,9 +169,9 @@ module GdeposylkaApi
 
       datas.delete_if { |k, v| v.nil? || v == '' }
 
-      uri = "/#{::GdeposylkaApi::API_VERSION}"
-      uri << "/track.#{func}/"
-      uri << "#{::GdeposylkaApi::API_TYPE}/?apikey=#{::GdeposylkaApi.api_key}"
+      uri =  "/#{::GdeposylkaApi::API_VERSION}"
+      uri << "/track.#{func}"
+      uri << "/json/?apikey=#{::GdeposylkaApi.api_key}"
 
       unless datas.empty?
         uri << "&"
