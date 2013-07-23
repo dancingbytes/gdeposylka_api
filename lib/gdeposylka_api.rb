@@ -1,6 +1,9 @@
 # encoding: utf-8
 require "gdeposylka_api/version"
 require "gdeposylka_api/base"
+require "gdeposylka_api/parcel"
+
+require "gdeposylka_api/railtie"  if defined?(::Rails)
 
 module GdeposylkaApi
 
