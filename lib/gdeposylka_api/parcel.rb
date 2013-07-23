@@ -110,7 +110,7 @@ module GdeposylkaApi
             service_name  = data[:service_name]  || data["service_name"]
             operation     = data[:operation]     || data["operation"]
 
-            next if timestamp.nl? || service_id == "GP"
+            next if timestamp.nil? || service_id == "GP"
 
             unless (message =~ /Прибыло в место вручения/i).nil?
               operation   = 5
