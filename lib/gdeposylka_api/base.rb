@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'net/http'
+require 'timeout'
 
 module GdeposylkaApi
 
@@ -191,16 +192,61 @@ module GdeposylkaApi
 
     def block_run
 
-      ::Net::HTTP.start( ::GdeposylkaApi::HOST, :use_ssl => ::GdeposylkaApi::USE_SSL ) do |http|
+      try_count = ::GdeposylkaApi::RETRY
 
-        begin
-          yield(http)
-        rescue => e
+      begin
+
+        ::Timeout::timeout(::GdeposylkaApi::TIMEOUT) {
+
+          ::Net::HTTP.start(
+            ::GdeposylkaApi::HOST,
+            ::GdeposylkaApi::PORT,
+            :use_ssl => ::GdeposylkaApi::USE_SSL
+          ) do |http|
+            yield(http)
+          end
+
+        }
+
+      rescue e = ::Errno::ECONNREFUSED
+
+        if try_count > 0
+
+          try_count -= 1
+          sleep ::GdeposylkaApi::WAIT_TIME
+          retry
+
+        else
+
           puts e.message
           puts e.backtrace.join("\n")
+          puts
+
         end
 
-      end
+      rescue e = ::Timeout::Error
+
+        if try_count > 0
+
+          try_count -= 1
+          sleep ::GdeposylkaApi::WAIT_TIME
+          retry
+
+        else
+
+          puts e.message
+          puts e.backtrace.join("\n")
+          puts
+
+        end
+
+      rescue => e
+
+        puts e.message
+        puts e.backtrace.join("\n")
+        puts
+
+      end # begin
 
     end # block_run
 

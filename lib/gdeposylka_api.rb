@@ -10,6 +10,10 @@ module GdeposylkaApi
   extend self
 
   HOST        = 'ws.gdeposylka.ru'
+  TIMEOUT     = 30
+  PORT        = 80
+  RETRY       = 3
+  WAIT_TIME   = 5
   USE_SSL     = false
   API_VERSION = 'x1'
 
