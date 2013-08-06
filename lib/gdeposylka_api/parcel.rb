@@ -66,14 +66,14 @@ module GdeposylkaApi
 
       while(el = ::ParcelTrack.actual.for_check.first)
 
-        result, message, tries = work_with(
+        result, message, tries, stop = work_with(
           ::GdeposylkaApi::tracks.add(el.delivery_identifier),
           el.delivery_identifier, tries
         ) do |res|
           added += 1
         end
 
-        unless result
+        if stop
           puts message
           break
         end
@@ -95,7 +95,7 @@ module GdeposylkaApi
 
       while(el = ::ParcelTrack.actual.for_check.first)
 
-        result, message, tries = work_with(
+        result, message, tries, stop = work_with(
           ::GdeposylkaApi::tracks.status(el.delivery_identifier),
           el.delivery_identifier, tries
         ) do |res|
@@ -131,7 +131,7 @@ module GdeposylkaApi
 
         end # do
 
-        unless result
+        if stop
           puts message
           break
         end
@@ -174,7 +174,7 @@ module GdeposylkaApi
     def work_with(res, delivery_identifier, tries = 0)
 
       if res.empty?
-        return [false, "Сервер вернул пустой ответ", tries]
+        return [false, "Сервер вернул пустой ответ", tries, true]
       else
 
         code = res["response"]["code"]
@@ -189,49 +189,49 @@ module GdeposylkaApi
             set_checked(delivery_identifier)
 
             yield(res) if block_given?
-            return [true, "", tries]
+            return [true, "", tries, false]
 
           when 400 then
 
-            return [false, "Неизвестная ошибка. Сервер вернул: #{res.inspect}", tries]
+            return [false, "Неизвестная ошибка. Сервер вернул: #{res.inspect}", tries, true]
 
           when 401 then
 
-            return [false, "Неверный ключ API", tries]
+            return [false, "Неверный ключ API", tries, true]
 
           when 402 then
 
             set_checked(delivery_identifier)
-            return [false, "Неправильный формат номера отслеживания: #{delivery_identifier}", tries]
+            return [false, "Неправильный формат номера отслеживания: #{delivery_identifier}", tries, false]
 
           when 403 then
 
             set_checked(delivery_identifier)
-            return [false, "Неизвестный номер трека: #{delivery_identifier}", tries]
+            return [false, "Неизвестный номер трека: #{delivery_identifier}", tries, false]
 
           when 404 then
 
-            return [false, "Не хватает некоторых обязательныx параметров", tries]
+            return [false, "Не хватает некоторых обязательныx параметров", tries, true]
 
           when 405 then
 
-            return [false, "Попытка выполнить не корректное действие над треком", tries]
+            return [false, "Попытка выполнить не корректное действие над треком", tries, true]
 
           when 406 then
 
-            return [false, "При добавлении трека обязателен параметр country", tries]
+            return [false, "При добавлении трека обязателен параметр country", tries, true]
 
           when 407 then
 
-            return [false, "Не правильный формат номера телефона", tries]
+            return [false, "Не правильный формат номера телефона", tries, true]
 
           when 408 then
 
-            return [false, "Не достаточно средств на счету для выполнения операции", tries]
+            return [false, "Не достаточно средств на счету для выполнения операции", tries, true]
 
           when 409 then
 
-            return [false, "Превышено количество треков на данном тарифном плане", tries]
+            return [false, "Превышено количество треков на данном тарифном плане", tries, true]
 
           when 410 then
 
@@ -241,14 +241,14 @@ module GdeposylkaApi
             sleep ::GdeposylkaApi::Parcel::TIMEOUT
 
             if tries <= 3
-              return [true, "Возобновляем работу", tries]
+              return [true, "Возобновляем работу", tries, false]
             else
-              return [false, "Закончилось число потпыток: #{tries}", tries]
+              return [false, "Закончилось число потпыток: #{tries}", tries, true]
             end
 
         else
 
-          return [false, "Неизвестная ошибка. Сервер вернул: #{res.inspect}", tries]
+          return [false, "Неизвестная ошибка. Сервер вернул: #{res.inspect}", tries, true]
 
         end # case
 
