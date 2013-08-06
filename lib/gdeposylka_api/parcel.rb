@@ -75,7 +75,7 @@ module GdeposylkaApi
 
         unless result
           puts message
-          next
+          break
         end
 
       end # while
@@ -133,7 +133,7 @@ module GdeposylkaApi
 
         unless result
           puts message
-          next
+          break
         end
 
       end # while
@@ -186,9 +186,7 @@ module GdeposylkaApi
 
           when 200, 201 then
 
-            ::ParcelTrack.where(:delivery_identifier => delivery_identifier).
-              with(safe: true).
-              update_all(checked: true)
+            set_checked(delivery_identifier)
 
             yield(res) if block_given?
             return [true, "", tries]
@@ -203,14 +201,12 @@ module GdeposylkaApi
 
           when 402 then
 
+            set_checked(delivery_identifier)
             return [false, "Неправильный формат номера отслеживания: #{delivery_identifier}", tries]
 
           when 403 then
 
-            ::ParcelTrack.where(:delivery_identifier => delivery_identifier).
-              with(safe: true).
-              update_all(checked: true)
-
+            set_checked(delivery_identifier)
             return [false, "Неизвестный номер трека: #{delivery_identifier}", tries]
 
           when 404 then
@@ -239,10 +235,10 @@ module GdeposylkaApi
 
           when 410 then
 
-            puts "Превышена частота запросов на сервер. Ожидаем: #{::Parcel::TIMEOUT} сек."
+            puts "Превышена частота запросов на сервер. Ожидаем: #{::GdeposylkaApi::Parcel::TIMEOUT} сек."
 
             tries += 1
-            sleep ::Parcel::TIMEOUT
+            sleep ::GdeposylkaApi::Parcel::TIMEOUT
 
             if tries <= 3
               return [true, "Возобновляем работу", tries]
@@ -259,6 +255,16 @@ module GdeposylkaApi
       end # if
 
     end # work_with
+
+    def set_checked(delivery_identifier)
+
+      ::ParcelTrack.where(:delivery_identifier => delivery_identifier).
+        with(safe: true).
+        update_all(checked: true)
+
+      self
+
+    end # set_checked
 
   end # Parcel
 
