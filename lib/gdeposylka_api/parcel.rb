@@ -75,7 +75,7 @@ module GdeposylkaApi
 
         unless result
           puts message
-          break
+          next
         end
 
       end # while
@@ -133,7 +133,7 @@ module GdeposylkaApi
 
         unless result
           puts message
-          break
+          next
         end
 
       end # while
