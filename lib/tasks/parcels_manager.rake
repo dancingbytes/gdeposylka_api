@@ -22,6 +22,13 @@ namespace :gdeposylka_api do
 
   end # :parcels_update_status
 
+  desc 'Возобновление отслеживание заказов.'
+  task :parcels_resume => :environment do
+
+    ::GdeposylkaApi::Parcel.resume_all
+
+  end # :parcels_resume
+
 end # :gdeposylka_api
 
 # bundle exec rake gdeposylka_api:parcels_load_all --trace

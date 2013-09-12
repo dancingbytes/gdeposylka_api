@@ -85,6 +85,33 @@ module GdeposylkaApi
 
     end # add_all
 
+    def resume_all
+
+      total = ::ParcelTrack.actual.count
+      added = 0
+      tries = 0
+
+      ::ParcelTrack.actual.each do |el|
+
+        result, message, tries, stop = work_with(
+          ::GdeposylkaApi::tracks.resume(el.delivery_identifier),
+          el.delivery_identifier, tries
+        ) do |res|
+          added += 1
+        end
+
+        if stop
+          puts message
+          break
+        end
+
+      end # each
+
+      puts "Возобновлено отслеживание посылок #{added} из #{total}"
+      self
+
+    end # resume_all
+
     def update_statuses
 
       total = ::ParcelTrack.actual.count
