@@ -64,7 +64,7 @@ module GdeposylkaApi
       added = 0
       tries = 0
 
-      while(el = ::ParcelTrack.actual.for_check.first)
+      ::ParcelTrack.actual.for_check.each do |el|
 
         result, message, tries, stop = work_with(
           ::GdeposylkaApi::tracks.add(el.delivery_identifier),
@@ -73,12 +73,7 @@ module GdeposylkaApi
           added += 1
         end
 
-        if stop
-          puts message
-          break
-        end
-
-      end # while
+      end # each
 
       puts "Добавлено #{added} из #{total}"
       self
@@ -100,11 +95,6 @@ module GdeposylkaApi
           added += 1
         end
 
-        if stop
-          puts message
-          break
-        end
-
       end # each
 
       puts "Возобновлено отслеживание посылок #{added} из #{total}"
@@ -120,7 +110,7 @@ module GdeposylkaApi
       checked = 0
       tries   = 0
 
-      while(el = ::ParcelTrack.actual.for_check.first)
+      ::ParcelTrack.actual.for_check.each do |el|
 
         result, message, tries, stop = work_with(
           ::GdeposylkaApi::tracks.status(el.delivery_identifier),
@@ -158,12 +148,7 @@ module GdeposylkaApi
 
         end # do
 
-        if stop
-          puts message
-          break
-        end
-
-      end # while
+      end # each
 
       puts "Обработано #{checked} из #{total}"
       self
