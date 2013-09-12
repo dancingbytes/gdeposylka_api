@@ -34,3 +34,4 @@ end # :gdeposylka_api
 # bundle exec rake gdeposylka_api:parcels_load_all --trace
 # bundle exec rake gdeposylka_api:parcels_add_all --trace
 # bundle exec rake gdeposylka_api:parcels_update_status --trace
+# bundle exec rake gdeposylka_api:parcels_resume --trace
